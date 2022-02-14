@@ -167,7 +167,6 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
         try {
             while (true) {
                 synchronized (unreceivedMessages) {
-                    System.out.println(houseKeepingThreadSleepDurationMilliseconds);
                     List<PublishedMessage> toRemove = new ArrayList<>();
                     for (PublishedMessage pm : unreceivedMessages.keySet()) {
                         if (isMessageExpired(pm) || unreceivedMessages.get(pm).isEmpty()) {
