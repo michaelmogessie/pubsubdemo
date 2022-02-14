@@ -15,6 +15,7 @@ import info.michaelmogessie.pubsubdemo.pojos.Message;
 public class MessageController {
 
     @PostMapping("/topics")
+    @CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
     ResponseEntity<?> publishMesssage(@RequestBody Message message) {
 
         try {
