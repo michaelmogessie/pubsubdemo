@@ -11,11 +11,10 @@ import info.michaelmogessie.pubsubdemo.handlers.WebSocketHandler;
 import info.michaelmogessie.pubsubdemo.pojos.Message;
 
 @RestController
-@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
 public class MessageController {
 
     @PostMapping("/topics")
-    @CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
+    @CrossOrigin()
     ResponseEntity<?> publishMesssage(@RequestBody Message message) {
 
         try {
