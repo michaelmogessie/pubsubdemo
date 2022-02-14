@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,7 +157,8 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         ClientInfo clientInfo = new ClientInfo.Builder().clientId(session.getId()).webSocketSession(session).build();
-        topicSubscriberMap.values().stream().filter(clientInfoList -> clientInfoList.contains(clientInfo)).toList()
+        topicSubscriberMap.values().stream().filter(clientInfoList -> clientInfoList.contains(clientInfo))
+                .collect(Collectors.toList())
                 .forEach(list -> list.remove(clientInfo));
     }
 
