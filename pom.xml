@@ -47,25 +47,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.15.3</version>
-				<configuration>
-					<verbose>true</verbose>
-					<images>
-						<image>
-							<name>pubsubdemo-docker</name>
-							<build>
-								<dockerFile>Dockerfile</dockerFile>
-								<assembly>
-									<descriptorRef>artifact</descriptorRef>
-								</assembly>
-							</build>
-						</image>
-					</images>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 	<profiles>
