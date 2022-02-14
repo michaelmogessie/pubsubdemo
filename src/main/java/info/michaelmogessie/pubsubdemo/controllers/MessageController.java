@@ -11,7 +11,7 @@ import info.michaelmogessie.pubsubdemo.handlers.WebSocketHandler;
 import info.michaelmogessie.pubsubdemo.pojos.Message;
 
 @RestController
-@CrossOrigin()
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
 public class MessageController {
 
     @PostMapping("/topics")
