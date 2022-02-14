@@ -10,10 +10,22 @@ import info.michaelmogessie.pubsubdemo.excpetions.TopicNotFoundException;
 import info.michaelmogessie.pubsubdemo.handlers.WebSocketHandler;
 import info.michaelmogessie.pubsubdemo.pojos.Message;
 
+/**
+ * Controller class with resources that manage message publishing.
+ */
 @RestController
 @CrossOrigin()
 public class MessageController {
 
+    /**
+     * This controller resource is used to post a message by the message publisher.
+     * This controller resource receives a message posted by a publisher and relays
+     * it to the websocket handler, which will send it to clients subscribed to the
+     * particular topic included inside the message.
+     * 
+     * @param message The message that is published.
+     * @return An HTTP response.
+     */
     @PostMapping("/topics")
     ResponseEntity<?> publishMesssage(@RequestBody Message message) {
 
