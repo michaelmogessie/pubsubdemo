@@ -26,6 +26,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hamcrest</groupId>
+					<artifactId>hamcrest-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -47,25 +58,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.15.3</version>
-				<configuration>
-					<verbose>true</verbose>
-					<images>
-						<image>
-							<name>pubsubdemo-docker</name>
-							<build>
-								<dockerFile>Dockerfile</dockerFile>
-								<assembly>
-									<descriptorRef>artifact</descriptorRef>
-								</assembly>
-							</build>
-						</image>
-					</images>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 	<profiles>
@@ -84,6 +76,13 @@
 			<properties>
 				<activatedProperties>prod</activatedProperties>
 				<maven.test.skip>true</maven.test.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<activatedProperties>test</activatedProperties>
+				<maven.test.skip>false</maven.test.skip>
 			</properties>
 		</profile>
 	</profiles>

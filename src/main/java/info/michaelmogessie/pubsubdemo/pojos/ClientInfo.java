@@ -42,6 +42,10 @@ public class ClientInfo {
         return clientId;
     }
 
+    public void setWebSocketSession(WebSocketSession webSocketSession) {
+        this.webSocketSession = webSocketSession;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
