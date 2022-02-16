@@ -73,6 +73,7 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
         topics.stream().forEach(topic -> {
             topicSubscriberMap.put(topic, new ArrayList<>());
         });
+        topicSubscriberMap.put("temperature", new ArrayList<>());
     }
 
     /**
@@ -220,12 +221,12 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
         for (ClientInfo clientInfo : topicSubscriberMap.get(message.getTopic())) {
             try {
                 clientInfo.getWebSocketSession().sendMessage(textMessage);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 logger.error(e.getMessage());
                 // Here we spawn a short-lived thread that will add the message that could not
                 // be sent to the unreceived messages map. We do this so the controller method
                 // can return a response to the client without having to wait for this
-                // opertation.
+                // operation.
                 new WebSocketHandler.UnreceivedMessagesUpdater(publishedMessage, clientInfo).start();
             }
         }
@@ -305,9 +306,19 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
         @Override
         public void run() {
             synchronized (unreceivedMessages) {
-                unreceivedMessages.getOrDefault(publishedMessage, new ArrayList<>()).add(clientInfo.getClientId());
+                if (!unreceivedMessages.containsKey(publishedMessage)) {
+                    unreceivedMessages.put(publishedMessage, new ArrayList<>());
+                }
+                unreceivedMessages.get(publishedMessage).add(clientInfo.getClientId());
             }
         }
     }
 
+    public static Map<String, List<ClientInfo>> getTopicSubscriberMap() {
+        return topicSubscriberMap;
+    }
+
+    public static Map<PublishedMessage, List<String>> getUnreceivedMessages() {
+        return unreceivedMessages;
+    }
 }
