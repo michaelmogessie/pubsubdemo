@@ -45,7 +45,7 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
     // Some string values, decalred here to avoid repitition in use.
     private static final String CLIENT_ID = "clientId";
     private static final String MESSAGE_TOPIC_NOT_FOUND = "COULD NOT UNSUBSCRIBE. TOPIC NOT FOUND.";
-    private static final String MESSAGE_NOT_SUBSCRIBED = "YOU ARE NOT SUBSCRIBED TO THIS TOPIC";
+    public static final String MESSAGE_NOT_SUBSCRIBED = "YOU ARE NOT SUBSCRIBED TO THIS TOPIC";
     private static final String MESSAGE_MALFORMED_PAYLOAD = "MESSAGE PAYLOAD IS INVALID.";
     private static final String TOPIC_ACTION_SUBSCRIBE = "subscribe";
     private static final String TOPIC_ACTION_UNSUBSCRIBE = "unsubscribe";
