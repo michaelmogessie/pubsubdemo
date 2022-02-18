@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 
 import info.michaelmogessie.pubsubdemo.excpetions.TopicNotFoundException;
+import info.michaelmogessie.pubsubdemo.fakes.FakeClient;
 import info.michaelmogessie.pubsubdemo.fakes.FakeWebSocketSession;
 import info.michaelmogessie.pubsubdemo.pojos.ClientInfo;
 import info.michaelmogessie.pubsubdemo.pojos.Message;
@@ -297,6 +299,60 @@ public class WebSocketHandlerTest {
         WebSocketHandler.publish(message);
 
         assertNotEquals(message.getBody(), webSocketSession.getMessage());
+    }
+
+    @Test
+    void testMultipleClientsConnectingAndSubscribingToTopic() throws Exception {
+        webSocketHandler = new WebSocketHandler(topics, houseKeepingThreadSleepDurationMilliseconds);
+        for (int i = 0; i < 20; i++) {
+            new Thread(new FakeClient(webSocketHandler, "temperature")).start();
+        }
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(20, WebSocketHandler.getTopicSubscriberMap().get("temperature").size());
+    }
+
+    @Test
+    void testMultipleClientsConnectingAndSubscribingToTopicAndUnsubscribingFromTopic() throws Exception {
+        webSocketHandler = new WebSocketHandler(topics, houseKeepingThreadSleepDurationMilliseconds);
+        List<FakeClient> fakeClientList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            FakeClient fakeClient = new FakeClient(webSocketHandler, "temperature");
+            fakeClientList.add(fakeClient);
+            new Thread(fakeClient).start();
+        }
+        try {
+            Thread.sleep(20000);
+            for (FakeClient fakeClient : fakeClientList) {
+                fakeClient.unsubscribe("temperature");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(0, WebSocketHandler.getTopicSubscriberMap().get("temperature").size());
+    }
+
+    @Test
+    void testMultipleClientsConnectingAndSubscribingToDifferentTopicsAndUnsubscribingFromTopics() throws Exception {
+        webSocketHandler = new WebSocketHandler(topics, houseKeepingThreadSleepDurationMilliseconds);
+        List<FakeClient> fakeClientList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            FakeClient fakeClient = new FakeClient(webSocketHandler, topics.get(new Random().nextInt(topics.size())));
+            fakeClientList.add(fakeClient);
+            new Thread(fakeClient).start();
+        }
+        try {
+            Thread.sleep(20000);
+            for (FakeClient fakeClient : fakeClientList) {
+                fakeClient.unsubscribe(fakeClient.getTopic());
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertEquals(0, WebSocketHandler.getTopicSubscriberMap().get("temperature").size());
     }
 
 }
