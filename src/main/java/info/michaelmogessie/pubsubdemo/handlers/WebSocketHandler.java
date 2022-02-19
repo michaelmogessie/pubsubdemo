@@ -245,9 +245,11 @@ public class WebSocketHandler extends TextWebSocketHandler implements Runnable {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         ClientInfo clientInfo = new ClientInfo.Builder().clientId(session.getId()).webSocketSession(session).build();
-        topicSubscriberMap.values().stream().filter(clientInfoList -> clientInfoList.contains(clientInfo))
-                .collect(Collectors.toList())
-                .forEach(list -> list.remove(clientInfo));
+        synchronized (topicSubscriberMap) {
+            topicSubscriberMap.values().stream().filter(clientInfoList -> clientInfoList.contains(clientInfo))
+                    .collect(Collectors.toList())
+                    .forEach(list -> list.remove(clientInfo));
+        }
     }
 
     /**
